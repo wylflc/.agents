@@ -26,6 +26,7 @@
 - When creating a new Git repository, also create or update `.gitignore` and include `.agents/` and `.codex/` by default.
 - If it is a Git repository, inspect `git status --short` before editing so existing user changes are known.
 - After completing requested modifications and validation, automatically create a Git commit for the agent's own changes.
+- Group commits by change type. Even within one conversation, commit unrelated or different-type changes separately.
 - Do not stage unrelated files or user changes.
 - Do not commit when the user explicitly asks not to commit, when the task was read-only, or when validation failed and the user has not approved committing anyway.
 - Never push, deploy, reset history, or discard changes without explicit approval.
@@ -37,6 +38,7 @@
 - Do not expand from a minimal-change plan into a thorough refactor, or from a thorough plan into unrelated cleanup, without making that scope change explicit.
 - Do not add new dependencies without a clear reason.
 - Do not delete code, comments, files, or user work unless explicitly asked or directly required by the requested change.
+- After key codebase changes, update related README, CONTEXT, ADR, or other project documentation if they are affected.
 
 ## Validation
 - After code changes, run the most targeted useful check available: test, lint, typecheck, build, or minimal repro.
