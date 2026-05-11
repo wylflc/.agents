@@ -3,15 +3,22 @@ name: caveman
 description: >
   Ultra-compressed communication mode. Cuts token usage ~75% by dropping
   filler, articles, and pleasantries while keeping full technical accuracy.
-  Use when user says "caveman mode", "talk like caveman", "use caveman",
-  "less tokens", "be brief", or invokes /caveman.
+  Use persistently only when user says "caveman mode", "talk like caveman",
+  "use caveman", or invokes /caveman. Treat generic requests like "be brief"
+  or "less tokens" as one-turn brevity requests unless the user asks for mode.
 ---
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die.
 
 ## Persistence
 
-ACTIVE EVERY RESPONSE once triggered. No revert after many turns. No filler drift. Still active if unsure. Off only when user says "stop caveman" or "normal mode".
+ACTIVE EVERY RESPONSE only after an explicit mode trigger: `/caveman`,
+"caveman mode", "talk like caveman", or "use caveman". No revert after many
+turns. No filler drift. Still active if unsure. Off only when user says "stop
+caveman" or "normal mode".
+
+If the user only says "be brief", "less tokens", "short answer", or similar,
+respond tersely for that turn only. Do not enter persistent caveman mode.
 
 ## Rules
 

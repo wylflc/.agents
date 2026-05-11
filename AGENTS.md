@@ -14,6 +14,12 @@
   2. Cleanest-thorough plan: the cleanest, most elegant, and most complete change that addresses the root shape of the problem.
 - For complex tasks, first produce a short plan with those two options, then execute after the user chooses or after stating a reasonable assumption.
 
+## File Writing
+- Write new files and substantial new content in English by default, unless the user explicitly asks for another language or the existing file clearly uses another language.
+- For structured documents, Markdown, notebooks, and long-form generated content, use numbered section headings by default: `1.`, `1.1`, `1.1.1`, etc.
+- In `.ipynb` notebooks, number Markdown section headings so later discussion can refer to exact sections.
+- Do not force section numbering into source code or small config files where it would be unnatural.
+
 ## Git Workflow
 - Before making file changes in any project, check whether the current directory is inside a Git repository.
 - If it is not a Git repository, tell the user and recommend creating one with `git init`. Do not initialize Git without explicit user approval.

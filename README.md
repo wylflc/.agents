@@ -16,9 +16,9 @@ request matches the trigger conditions in the description.
 
 | Skill | Purpose | Trigger conditions |
 | --- | --- | --- |
-| `caveman` | Ultra-compressed response mode for reducing token usage. | User says "caveman mode", "talk like caveman", "use caveman", "less tokens", "be brief", or invokes `/caveman`. Once triggered, it stays active until the user says "stop caveman" or "normal mode". |
+| `caveman` | Ultra-compressed response mode for reducing token usage. | Persistent mode only when user says "caveman mode", "talk like caveman", "use caveman", or invokes `/caveman`. Generic brevity requests like "be brief" apply only to the current turn. |
 | `diagnose` | Structured debugging loop for bugs and performance regressions. | User says "diagnose this" or "debug this", reports a bug, says something is broken, throwing, or failing, or describes a performance regression. |
-| `find-skills` | Discover and install additional agent skills. | User asks questions like "how do I do X", "find a skill for X", "is there a skill that can...", or otherwise asks about extending agent capabilities with installable skills. |
+| `find-skills` | Discover and install additional agent skills. | User explicitly asks to find, list, compare, install, or update skills; asks whether an installable skill exists; or wants to extend Codex with reusable skill capabilities. |
 | `grill-with-docs` | Stress-test plans against project language and ADRs. | User wants to challenge or refine a plan against the project's domain model, terminology, `CONTEXT.md`, or ADRs. |
 | `improve-codebase-architecture` | Find architecture and refactoring opportunities that improve module depth, locality, and testability. | User wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-navigable. |
 | `tdd` | Guide test-first work with a red-green-refactor loop. | User wants to build features or fix bugs using TDD, mentions "red-green-refactor", wants integration tests, or asks for test-first development. |

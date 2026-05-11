@@ -12,8 +12,16 @@ description: Create new agent skills with proper structure, progressive disclosu
    - What user requests should trigger it?
    - Does it need scripts, references, assets, or only instructions?
    - Are there source materials or examples to include?
+   - Should it be user-level or project-level?
 
-2. Create the smallest useful structure:
+2. Choose the destination:
+   - User-level skills default to `~/.agents/skills/<skill-name>`.
+   - Project-level skills default to `./.agents/skills/<skill-name>` from the
+     project root.
+   - If the user does not specify scope, use user-level for reusable personal
+     workflows and project-level for repo-specific domain knowledge.
+
+3. Create the smallest useful structure:
 
    ```text
    skill-name/
@@ -24,7 +32,7 @@ description: Create new agent skills with proper structure, progressive disclosu
    └── assets/               # optional templates or output resources
    ```
 
-3. Write `SKILL.md` with YAML frontmatter and concise instructions.
+4. Write `SKILL.md` with YAML frontmatter and concise instructions.
 
    ```md
    ---
@@ -37,16 +45,21 @@ description: Create new agent skills with proper structure, progressive disclosu
    [Essential workflow and resource guidance.]
    ```
 
-4. Add bundled resources only when they directly support the skill:
+5. Add bundled resources only when they directly support the skill:
    - `scripts/` for deterministic or repeated operations.
    - `references/` for longer guidance that should load only when relevant.
    - `assets/` for files used in outputs, such as templates or images.
 
-5. Validate the skill:
+6. Validate the skill:
 
    ```sh
-   python3 /Users/yaleiwang/.codex/skills/.system/skill-creator/scripts/quick_validate.py path/to/skill
+   python3 "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py" path/to/skill
    ```
+
+   If the validator is unavailable or missing Python dependencies, perform an
+   equivalent check: `SKILL.md` exists, frontmatter is valid YAML, only allowed
+   frontmatter keys are used, `name` is lowercase hyphen-case, and
+   `description` is a non-empty string under 1024 characters.
 
 ## Standards
 
