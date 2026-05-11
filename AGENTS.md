@@ -12,6 +12,16 @@
 - For straightforward coding tasks, prefer simple solutions.
 - For complex tasks, first produce a short plan, then execute.
 
+## Git Workflow
+- Before making file changes in any project, check whether the current directory is inside a Git repository.
+- If it is not a Git repository, tell the user and recommend creating one with `git init`. Do not initialize Git without explicit user approval.
+- When creating a new Git repository, also create or update `.gitignore` and include `.agents/` and `.codex/` by default.
+- If it is a Git repository, inspect `git status --short` before editing so existing user changes are known.
+- After completing requested modifications and validation, automatically create a Git commit for the agent's own changes.
+- Do not stage unrelated files or user changes.
+- Do not commit when the user explicitly asks not to commit, when the task was read-only, or when validation failed and the user has not approved committing anyway.
+- Never push, deploy, reset history, or discard changes without explicit approval.
+
 ## Changes
 - Read the relevant files before changing them.
 - Match existing style unless there is a strong reason not to.
