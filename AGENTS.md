@@ -9,8 +9,10 @@
 
 ## Working Style
 - Use available skills when they clearly apply, but do not duplicate their workflows here.
-- For straightforward coding tasks, prefer simple solutions.
-- For complex tasks, first produce a short plan, then execute.
+- When providing a modification plan for any project, present two options:
+  1. Minimal-change plan: the smallest practical change that solves the request.
+  2. Cleanest-thorough plan: the cleanest, most elegant, and most complete change that addresses the root shape of the problem.
+- For complex tasks, first produce a short plan with those two options, then execute after the user chooses or after stating a reasonable assumption.
 
 ## Git Workflow
 - Before making file changes in any project, check whether the current directory is inside a Git repository.
@@ -25,8 +27,8 @@
 ## Changes
 - Read the relevant files before changing them.
 - Match existing style unless there is a strong reason not to.
-- Keep changes scoped to the requested task.
-- Avoid unrelated refactors unless the task cannot be completed otherwise.
+- Keep implementation scope aligned with the selected plan.
+- Do not expand from a minimal-change plan into a thorough refactor, or from a thorough plan into unrelated cleanup, without making that scope change explicit.
 - Do not add new dependencies without a clear reason.
 - Do not delete code, comments, files, or user work unless explicitly asked or directly required by the requested change.
 
