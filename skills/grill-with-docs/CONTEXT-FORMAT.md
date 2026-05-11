@@ -46,11 +46,29 @@ _Avoid_: Client, buyer, account
 - **Group terms under subheadings** when natural clusters emerge. If all terms belong to a single cohesive area, a flat list is fine.
 - **Write an example dialogue.** A conversation between a dev and a domain expert that demonstrates how the terms interact naturally and clarifies boundaries between related concepts.
 
-## Single vs multi-context repos
+## Path selection
 
-**Single context (most repos):** One `CONTEXT.md` at the repo root.
+Use the repository root as the anchor. Prefer `git rev-parse --show-toplevel`;
+if there is no Git repository, use the current working directory as the root.
 
-**Multiple contexts:** A `CONTEXT-MAP.md` at the repo root lists the contexts, where they live, and how they relate to each other:
+### Single-context repos
+
+Most repos have one domain context. Put it at:
+
+```text
+repo/
+└── CONTEXT.md
+```
+
+This is the default. If no domain docs exist, create root `CONTEXT.md` lazily
+when the first term is resolved.
+
+### Multi-context repos
+
+Use multiple context files only when the repo has multiple independent business
+contexts with different vocabularies or ownership. Put a `CONTEXT-MAP.md` at
+the repo root and context-specific `CONTEXT.md` files under the owning context
+directories:
 
 ```md
 # Context Map
@@ -70,8 +88,11 @@ _Avoid_: Client, buyer, account
 
 The skill infers which structure applies:
 
-- If `CONTEXT-MAP.md` exists, read it to find contexts
-- If only a root `CONTEXT.md` exists, single context
-- If neither exists, create a root `CONTEXT.md` lazily when the first term is resolved
+- If root `CONTEXT-MAP.md` exists, read it first and choose the matching context.
+- If only root `CONTEXT.md` exists, use it.
+- If neither exists, start with root `CONTEXT.md`.
+- Do not create `CONTEXT-MAP.md` just because the code has many folders. Create
+  it only after separate business contexts are identified.
 
-When multiple contexts exist, infer which one the current topic relates to. If unclear, ask.
+When multiple contexts exist, infer which one the current topic relates to. If
+unclear, ask before editing docs.

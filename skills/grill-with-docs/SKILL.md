@@ -1,80 +1,102 @@
 ---
 name: grill-with-docs
-description: Grilling session that challenges your plan against the existing domain model, sharpens terminology, and updates documentation (CONTEXT.md, ADRs) inline as decisions crystallise. Use when user wants to stress-test a plan against their project's language and documented decisions.
+description: Grilling session that challenges each plan against the existing domain model, sharpens terminology, and updates documentation (CONTEXT.md, ADRs) inline as decisions crystallise. Use when user wants to stress-test a plan against their project's language and documented decisions, especially when a new topic may need fresh concept clarification.
 ---
 
-Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.
+# Grill With Docs
 
-Ask the questions one at a time, waiting for feedback on each question before continuing.
+Challenge the user's plan until the current topic is precise enough to act on.
+Every invocation is a new grilling session unless the user explicitly says it
+continues the previous one.
 
-If a question can be answered by exploring the codebase, explore the codebase instead.
+## Session Protocol
 
-## Domain awareness
+### 1. Start Session
 
-During codebase exploration, also look for existing documentation:
+Classify the request before asking or editing:
 
-### File structure
+- **New topic**: different feature, domain area, workflow, data model, user role,
+  integration, or architectural decision from the prior session.
+- **Continuation**: user explicitly continues the same unresolved plan or answers
+  the previous question.
+- **Documentation-only**: user only asks to record an already-resolved decision
+  or term.
 
-Most repos have a single context:
+For a new topic, reset the shared understanding. Do not assume earlier
+conversation, existing glossary entries, or previous ADRs fully answer the new
+topic. Start a fresh question queue.
 
-```
-/
-├── CONTEXT.md
-├── docs/
-│   └── adr/
-│       ├── 0001-event-sourced-orders.md
-│       └── 0002-postgres-for-write-model.md
-└── src/
-```
+### 2. Locate Domain Docs
 
-If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The map points to where each one lives:
+Use the path logic in [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md):
 
-```
-/
-├── CONTEXT-MAP.md
-├── docs/
-│   └── adr/                          ← system-wide decisions
-├── src/
-│   ├── ordering/
-│   │   ├── CONTEXT.md
-│   │   └── docs/adr/                 ← context-specific decisions
-│   └── billing/
-│       ├── CONTEXT.md
-│       └── docs/adr/
-```
+- Default to root `CONTEXT.md` for single-context repos.
+- If root `CONTEXT-MAP.md` exists, use it to choose the relevant context file.
+- If no domain docs exist, create root `CONTEXT.md` lazily when the first term is
+  resolved.
+- Only introduce `CONTEXT-MAP.md` after multiple independent business contexts
+  actually exist.
 
-Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.
+Also read relevant ADRs in `docs/adr/` or the context-specific `docs/adr/`
+listed by `CONTEXT-MAP.md`.
 
-## During the session
+### 3. Audit Relevance
 
-### Challenge against the glossary
+Before relying on existing docs, sort prior knowledge into:
 
-When the user uses a term that conflicts with the existing language in `CONTEXT.md`, call it out immediately. "Your glossary defines 'cancellation' as X, but you seem to mean Y — which is it?"
+- **Directly relevant**: applies to this topic as written.
+- **Possibly stale or overloaded**: same words appear, but the current topic may
+  use them differently.
+- **Not applicable**: belongs to a different context or decision.
 
-### Sharpen fuzzy language
+Treat "possibly stale or overloaded" as unresolved. Ask the user to confirm it
+instead of silently reusing it.
 
-When the user uses vague or overloaded terms, propose a precise canonical term. "You're saying 'account' — do you mean the Customer or the User? Those are different things."
+### 4. Build Question Queue
 
-### Discuss concrete scenarios
+For each new topic, generate unresolved questions across these categories:
 
-When domain relationships are being discussed, stress-test them with specific scenarios. Invent scenarios that probe edge cases and force the user to be precise about the boundaries between concepts.
+- Terms: overloaded or missing domain words.
+- Boundaries: what belongs inside or outside the concept.
+- Relationships: cardinality, ownership, lifecycle, ordering.
+- Scenarios: concrete happy path, edge cases, failure cases.
+- Constraints: business, compliance, performance, operational, migration.
+- Trade-offs: hard-to-reverse decisions and rejected alternatives.
+- Code/doc conflicts: places where implementation, docs, or user statements
+  disagree.
 
-### Cross-reference with code
+Ask one question at a time and include your recommended answer. If code or docs
+can answer a factual question, inspect them first; do not use code exploration
+to replace user judgment on intent, naming, boundaries, or trade-offs.
 
-When the user states how something works, check whether the code agrees. If you find a contradiction, surface it: "Your code cancels entire Orders, but you just said partial cancellation is possible — which is right?"
+For a new topic, ask at least one high-value calibration question unless the
+stop conditions are already satisfied by directly relevant docs. If skipping the
+question, state that reason explicitly.
 
-### Update CONTEXT.md inline
+### 5. Stop Conditions
 
-When a term is resolved, update `CONTEXT.md` right there. Don't batch these up — capture them as they happen. Use the format in [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md).
+Continue asking until all are true for the current topic:
 
-Don't couple `CONTEXT.md` to implementation details. Only include terms that are meaningful to domain experts.
+- Core terms are defined or explicitly reused from relevant docs.
+- Important boundaries and counterexamples have been tested.
+- Relationships and lifecycle rules are clear enough to guide implementation.
+- Code, docs, and user statements have no unresolved conflict.
+- No ADR-worthy decision is left unrecorded or unoffered.
 
-### Offer ADRs sparingly
+If you ask no question in a grilling session, say why: the topic is a clear
+continuation, documentation-only, or already fully covered by directly relevant
+docs.
 
-Only offer to create an ADR when all three are true:
+## Documentation Updates
 
-1. **Hard to reverse** — the cost of changing your mind later is meaningful
-2. **Surprising without context** — a future reader will wonder "why did they do it this way?"
-3. **The result of a real trade-off** — there were genuine alternatives and you picked one for specific reasons
+Update docs inline as decisions crystallize:
 
-If any of the three is missing, skip the ADR. Use the format in [ADR-FORMAT.md](./ADR-FORMAT.md).
+- Add or revise terms in the selected `CONTEXT.md` using
+  [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md).
+- Do not couple `CONTEXT.md` to implementation details. Only include terms that
+  are meaningful to domain experts.
+- Create an ADR only when all three are true:
+  1. **Hard to reverse** - the cost of changing later is meaningful.
+  2. **Surprising without context** - a future reader would wonder why.
+  3. **Real trade-off** - genuine alternatives existed and one was chosen.
+- Use [ADR-FORMAT.md](./ADR-FORMAT.md) for ADRs.
